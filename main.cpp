@@ -1,9 +1,11 @@
 #include <iostream>
 
+#include "include/CPU.h"
+
 int main()
 {
-  std::cout << "This is gonna be funnn."
-            << "\n";
+	CHIP8::CPU chip8 { "roms/ibm.ch8" };
+	chip8.init();
 
 	return 0; 
 }
