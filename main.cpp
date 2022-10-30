@@ -4,7 +4,7 @@
 
 int main()
 {
-	CHIP8::CPU chip8 { "roms/ibm.ch8" };
+	CHIP8::CPU chip8 { "F:\\code\\c++\\chip8-emu\\roms\\ibm.ch8" };
 	chip8.init();
 
 	return 0; 

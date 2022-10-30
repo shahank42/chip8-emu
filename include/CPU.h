@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include <iostream>
+#include <cstdio>
 
 namespace CHIP8 
 {
@@ -19,7 +19,6 @@ public:
 	CPU(std::string _ROMLocation);
 	~CPU();
 
-	friend void loadROM(const std::string& ROMPath);
 	void init();
 
 private:
