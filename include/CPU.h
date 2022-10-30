@@ -7,10 +7,12 @@
 #include <functional>
 #include <iterator>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
+#define DEBUG
+#include <cstdarg>
 #include <cstdio>
+
 
 namespace CHIP8 
 {
@@ -18,36 +20,43 @@ namespace CHIP8
 class CPU 
 {
 public:
+	/**
+	 * Basic constructor function for the CHIP8::CPU class.
+	 * 
+	 * @param _ROMLocation Give the filesystem path of the ROM file.
+	 */
 	CPU(std::string _ROMLocation);
+
+	/**
+	 * Basic destructor function for the CHIP8::CPU class.
+	 */
 	~CPU();
 
 	/**
 	 * Initializes the CHIP-8 CPU for a first-time run.
 	 * 
-	 * It involves four steps:
+	 * It involves three steps:
 	 *	- resetting all the registers
 	 *  - loading the fontset into memory
 	 *  - loading the ROM data into memory
-	 *  - building the instruction lookup table
 	 */
 	void init();
 
 	/**
 	 * Resets all the registers to their default values.
-	 * 
 	 * Note that the program counter starts reading from address 0x200.
 	 */
 	void resetRegisters();
 
 	/**
-	 * Builds an instruction lookup table for EACH AND EVERY possible opcode.
-	 * This helps in the quick "fetching" of instructions.
+	 * Decodes the fetched opcode and executes the associated instruction.
 	 * 
-	 * As heavy as it may sound, it's fine because this function only needs to
-	 * be invoked once -- during the initialization phase when the application
-	 * is launched.
+	 * This is essentially a giant nested switch statement with different branches
+	 * according to the opcode's data. 
+	 * 
+	 * @return A boolean flag indicating whether the "decode and execute" action was successfully carried out or not.
 	 */
-	void buildInstructionTable();
+	bool decodeAndExecuteInstruction();
 
 	/**
 	 * Handles all the events taking place during a single cycle of the CHIP-8 CPU.
@@ -71,28 +80,20 @@ private:
 
 	std::string m_ROMLocation { "" };
 
-	using instruction_t = std::function<void(void)>;
-	std::unordered_map<uint16_t, instruction_t> m_instructionTable {};
-
 	uint16_t m_currentOpcode { };
 
 	Registers m_registers { };
 	std::vector<uint8_t> m_memory { std::vector<uint8_t>(4096, 0) };
 	std::vector<uint16_t> m_stack { std::vector<uint16_t>(16, 0) };
-
+	std::vector<uint16_t> m_frameBuffer { std::vector<uint16_t>(64 * 32, 0) };
 	std::vector<uint8_t> m_keypad { std::vector<uint8_t>(16, 0) };
 
+
+	// Fetches the next opcode from memory, a combination of the two succeeding instructions from the PC.
+	uint16_t fetchOpcode() { return ((m_memory[m_registers.programCounter] << 8) | m_memory[m_registers.programCounter + 1]); }
+
 	// Sets the PC to point at the next instruction in memory.
-	void nextInstruction() { m_registers.programCounter += 2; }
-
-	// Sets the PC to skip the next instruction in memory, and point to the one after it.
-	void skipInstruction() { m_registers.programCounter += 4; }
-
-
-	// TODO: Update this documentation
-	// ~~Here lie the different opcodes the CHIP-8 virtual CPU supports~~
-	CPU::instruction_t OP_JMP(uint16_t addr);
-	CPU::instruction_t OP_CALL(uint16_t addr);
+	void pointToNextInstruction() { m_registers.programCounter += 2; }
 };
 
 }
