@@ -3,15 +3,15 @@
 
 namespace {
 
-	void DBG(const char* str, ...)
-	{
+void DBG(const char* str, ...)
+{
 #ifdef DEBUG
-		va_list arglist;
-		va_start(arglist, str);
-		vprintf(str, arglist);
-		va_end(arglist);
+	va_list arglist;
+	va_start(arglist, str);
+	vprintf(str, arglist);
+	va_end(arglist);
 #endif
-	}
+}
 
 }
 
@@ -22,6 +22,7 @@ bool CPU::decodeAndExecuteInstruction()
 {
 	uint8_t addr { static_cast<uint8_t>(m_currentOpcode & 0x0FFF) };
 	uint8_t x { static_cast<uint8_t>((m_currentOpcode & 0x0F00) >> 8) };
+	uint8_t y { static_cast<uint8_t>((m_currentOpcode & 0x00F0) >> 4) };
 	uint8_t val { static_cast<uint8_t>(m_currentOpcode & 0x00FF) };
 
 	switch ((m_currentOpcode & 0xF000))
@@ -70,6 +71,11 @@ bool CPU::decodeAndExecuteInstruction()
 		m_registers.index = addr;
 
 		DBG("LD (reg) I := (addr) 0x%x.\n", addr);
+		return true;
+		break;
+
+	case 0xD000:
+		DBG("DRW or at least trying, send help\n");
 		return true;
 		break;
 	}

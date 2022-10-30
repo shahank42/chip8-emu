@@ -36,7 +36,7 @@ public:
 	 * Initializes the CHIP-8 CPU for a first-time run.
 	 * 
 	 * It involves three steps:
-	 *	- resetting all the registers
+	 *  - resetting all the registers
 	 *  - loading the fontset into memory
 	 *  - loading the ROM data into memory
 	 */

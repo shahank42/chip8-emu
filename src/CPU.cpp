@@ -119,7 +119,7 @@ void CPU::cycle()
 
 	if (!decodeAndExecuteInstruction())
 	{
-		printf("Unknown opcode: %x, could not execute.\n", m_currentOpcode);
+		printf("UNKWN OP: %x, moved on.\n", m_currentOpcode);
 	}
 }
 
