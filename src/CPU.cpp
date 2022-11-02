@@ -115,12 +115,37 @@ void CPU::init()
 void CPU::cycle()
 {
 	m_currentOpcode = fetchOpcode();
-	pointToNextInstruction();
+
+#ifdef DEBUG_REGDATA
+	DBG("PC: 0x%x\t I: 0x%x\t SP: 0x%x\n", m_registers.programCounter, m_registers.index, m_registers.stackPointer);
+
+	DBG("V: ");
+	for (const auto Vx : m_registers.V)
+		DBG("0x%x ", Vx);
+#endif
 
 	if (!decodeAndExecuteInstruction())
 	{
-		printf("UNKWN OP: %x, moved on.\n", m_currentOpcode);
+#ifdef DEBUG_DISASSEMBLY
+		printf("\nUNKWN OP: %x, moved on.\n", m_currentOpcode);
+#endif
 	}
+
+	pointToNextInstruction();
+
+#ifdef DEBUG_SCREENDATA
+	for (const auto& row : m_screenData)
+	{
+		for (const auto pixel : row)
+			printf("%c", pixel == 0xFFFFFFFF ? '*' : '-');
+
+		printf("\n");
+	}
+
+	DBG("\n\n\n\n");
+#endif
+
+
 }
 
 }

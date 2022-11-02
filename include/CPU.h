@@ -1,6 +1,7 @@
 #ifndef CPU_H
 #define CPU_H
 
+#include <array>
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
@@ -9,7 +10,10 @@
 #include <string>
 #include <vector>
 
-#define DEBUG
+#define DEBUG_PRINT
+#define DEBUG_REGDATA
+#define DEBUG_SCREENDATA
+#define DEBUG_DISASSEMBLY
 #include <cstdarg>
 #include <cstdio>
 
@@ -85,7 +89,9 @@ private:
 	Registers m_registers { };
 	std::vector<uint8_t> m_memory { std::vector<uint8_t>(4096, 0) };
 	std::vector<uint16_t> m_stack { std::vector<uint16_t>(16, 0) };
-	std::vector<uint16_t> m_frameBuffer { std::vector<uint16_t>(64 * 32, 0) };
+
+	std::array<std::array<uint32_t, 64>, 32> m_screenData { };
+
 	std::vector<uint8_t> m_keypad { std::vector<uint8_t>(16, 0) };
 
 
